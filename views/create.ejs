@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- bootstrap css link -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body  style="background-color: #dddeee">
+  
+<!-- poll stracture -->
+  <div class="container ">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 my-5">
+        <div class="card card-body">
+          <h3 class="text-center text-primary">Create a poll</h3>
+          <form action="/create" method="POST">
+
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" name="title" class="form-control" >
+            </div>
+
+            <div class="form-group">
+              <label for="description"> Enter description</label>
+              <textarea name="description" id="description" class="form-control" ></textarea>
+            </div>
+
+            <div id="options">
+              <p>Enter your Options</p>
+              <div class="form-group">
+                <input type="text" name="options" class="form-control" placeholder="Option 1" >
+              </div>
+              <div class="form-group">
+                <input type="text" name="options" class="form-control" placeholder="Option 2" >
+              </div>
+            </div> <br>
+            <button class="btn btn-primary btn-sm " id="addOpt">Add more options</button> <br> <br>
+            <input type="submit" value="Create a new poll" class="btn btn-danger btn-sm">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+  <!-- bootsrap js link -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script>
+    let options = document.getElementById('options');
+    let addOption = document.getElementById('addOpt');
+
+    let currentOptionNumber = 3;
+    
+    addOption.addEventListener('click',(e)=>{
+      e.preventDefault();
+      let option =  createNewOption();
+      options.appendChild(option)
+    })
+    function createNewOption(){
+      let div= document.createElement('div');
+      div.className='form-group';
+
+      let input = document.createElement('input');
+      input.type= 'text';
+      input.name = 'options'
+      input.placeholder = 'option'+ currentOptionNumber++;
+      input.className='form-control'
+
+      div.appendChild(input);
+      return div;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poll pages</title>
+</head>
+<!-- bootstrap link -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 my-5">
+        <div class="card card-body">
+          <h5>Title : <%= poll.title %></h5>
+          <p>Description : <%= poll.description %></p>
+          <div class="my-4">
+            result
+          </div>
+          <div class="my-5">
+            <h4>What is your Opinion</h4>
+            <form action="/polls/<%=poll._id %>" method="POST">
+              <% for(let option of poll.options){ %>
+                  <div class="custom-control custom-radio">
+                    <input type="radio" name="option" id="<%=option._id %>" class="custom-control-input" value="<%= option._id %>">
+                    <label for="<%=option._id %>" class="custom-control-label">
+                      <%= option.name %>
+                    </label>
+                  </div>
+                <% } %>
+                <input type="submit" value="Submit your opinion" class="btn btn-primary">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- bootstrap link -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
