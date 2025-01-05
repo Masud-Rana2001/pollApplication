@@ -44,42 +44,60 @@ exports.viewPollGetController = async (req, res, next)=> {
   
   try {
     let poll = await Poll.findById(id)
-    res.render('viewPoll',{poll})
+    let options = [...poll.options]
+    
+    let result = [];
+    options.forEach(option => {
+      let percentage = (option.vote * 100) / poll.totalVotes;
+      result.push({ ...option._doc, percentage: percentage ? percentage : 0 });
+    });
+
+    res.render('viewPoll', { poll, result });
+
+
   }
   catch (error) {
     console.log(error);
   }
 }
 
-exports.viewPollPostController = async (req, res,next) => {
-  let id = req.params.id;
-  let optionId = req.body.option
-    console.log();
-    
+
+
+
+
+exports.viewPollPostController = async (req, res, next) => {
+  const id = req.params.id;
+  const optionId = req.body.option;
+
   try {
-    let poll = await Poll.findById(id)
-    let options = [...poll.options]
+    const poll = await Poll.findById(id);
+    if (!poll) {
+      return res.status(404).send('Poll not found.');
+    }
 
-    let index = options.findIndex(opt => opt.id === optionId);
-    options[index] = options[index].vote + 1;
+    const options = [...poll.options];
 
-    let totalVotes = poll.totalVotes + 1;
 
-    // await poll.updateOne(
-    //   { _id: poll._id },
-    //   { $set: { options, totalVotes } }
-    // );
-    
-    await poll.fineByIdAndUpdate( 
-      id,
-      { $set: { options, totalVotes } },
-      { new: true }
-    )
 
-    console.log(id,poll)
+    const index = options.findIndex(opt => opt.id === optionId);
 
-    res.redirect(`/polls/${id}`)
+    if (index === -1) {
+      return res.status(400).send('Invalid option.');
+    }
+
+    // Increment vote count
+    options[index].vote += 1;
+    const totalVotes = poll.totalVotes + 1;
+
+
+    // Save updated poll
+    await Poll.findByIdAndUpdate(poll._id, {
+      $set: { options, totalVotes },
+    });
+
+    res.redirect(`/polls/${id}`);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.status(500).send('An error occurred while processing the poll.');
   }
-}
+};
